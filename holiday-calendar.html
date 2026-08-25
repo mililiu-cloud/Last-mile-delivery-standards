@@ -877,7 +877,7 @@ const MONTHS = [
 
 let lang = "zh";
 let regionId = "all";
-let monthIdx = 0; // index into MONTHS, default to first month (September)
+let monthIdx = findTodayMonthIdx(); // default to whatever the real current month is (clamped into range)
 let monthPickerOpen = false;
 
 function currentRegion() { return REGIONS.find(r => r.id === regionId); }
