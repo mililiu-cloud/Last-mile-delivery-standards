@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>2026-2027年 全球尾程停摆假期日历</title>
+<style>
+  :root {
+    --navy: #10233F;
+    --navy-dark: #0A1830;
+    --ink: #1B2432;
+    --slate: #5B6472;
+    --line: #E4E1D8;
+    --paper: #FAF8F3;
+    --card: #FFFFFF;
+    --brass: #A88B4A;
+    --brass-soft: #D8C79A;
+    --severe: #7A2331; --severe-bg: #F7EBE9; --severe-line: #E3C6C3;
+    --medium: #8A6A26; --medium-bg: #F6EFDE; --medium-line: #E4D3A6;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #EEEAE1;
+    font-family: "Noto Sans CJK SC", "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+  }
+  .shell { padding: 26px 20px 30px; }
+  .page {
+    max-width: 1240px; margin: 0 auto; background: var(--paper);
+    border: 1px solid var(--line); border-radius: 2px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(20,20,10,0.04), 0 12px 32px rgba(20,20,10,0.08);
+  }
+
+  .header {
+    background: var(--navy-dark);
+    background-image: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 62%, #142a4e 100%);
+    color: #fff; padding: 22px 34px 18px; position: relative;
+    border-bottom: 2px solid var(--brass);
+  }
+  .kicker {
+    display: block; color: var(--brass-soft); font-size: 10.5px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .header h1 {
+    margin: 0 0 4px; font-size: 25px; font-weight: 500; letter-spacing: 0.3px;
+    font-family: "Noto Serif CJK SC", Georgia, serif;
+  }
+  .header .sub { display: none; }
+  .header .coverage { color: #B9C4D9; font-size: 11.5px; line-height: 1.6; margin: 6px 0 0; max-width: 880px; letter-spacing: 0.1px; }
+  .header .note { display: none; }
+  .lang-toggle {
+    position: absolute; top: 22px; right: 34px;
+    background: transparent; border: 1px solid rgba(216,199,154,0.55);
+    color: var(--brass-soft); border-radius: 2px; padding: 6px 16px; font-size: 11.5px; font-weight: 600;
+    cursor: pointer; letter-spacing: 1px; transition: all 0.15s ease;
+  }
+  .lang-toggle:hover { background: rgba(216,199,154,0.12); border-color: var(--brass-soft); }
+
+  .region-bar {
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    background: #F2EEE3; padding: 10px 34px; border-bottom: 1px solid var(--line);
+  }
+  .region-bar .rlabel { font-size: 11.5px; color: var(--slate); font-weight: 600; letter-spacing: 0.3px; margin-right: 2px; }
+  .region-select-wrap { position: relative; display: inline-block; }
+  .region-select-wrap::after {
+    content: "▾"; position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--navy); font-size: 10px; pointer-events: none;
+  }
+  .region-select {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    border: 1px solid #CBC5B4; background: #fff; color: var(--ink);
+    border-radius: 2px; padding: 6px 28px 6px 12px; font-size: 12px; font-weight: 600;
+    cursor: pointer; min-width: 160px; font-family: inherit;
+    transition: border-color 0.15s ease;
+  }
+  .region-select:hover { border-color: var(--brass); }
+  .region-select:focus { outline: none; border-color: var(--brass); box-shadow: 0 0 0 2px rgba(168,139,74,0.18); }
+  .region-badge-hint { font-size: 11px; color: var(--slate); }
+  .bar-divider { width: 1px; align-self: stretch; background: var(--line); margin: 0 2px; }
+
+  .month-nav { display: flex; align-items: center; gap: 10px; position: relative; }
+  .month-nav-btn {
+    width: 26px; height: 26px; border: 1px solid #CBC5B4; background: #fff;
+    color: var(--navy); border-radius: 2px; cursor: pointer; font-size: 12px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;
+    font-family: inherit; padding: 0; line-height: 1;
+  }
+  .month-nav-btn:hover:not(:disabled) { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .month-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .month-picker { position: relative; display: inline-block; }
+  .month-nav-label {
+    font-size: 14px; font-weight: 600; color: var(--navy-dark); letter-spacing: 0.3px;
+    font-family: "Noto Serif CJK SC", Georgia, serif; min-width: 108px; text-align: center;
+    background: none; border: 1px solid transparent; border-radius: 2px; cursor: pointer;
+    padding: 4px 8px; display: flex; align-items: center; justify-content: center; gap: 5px;
+    transition: all 0.15s ease;
+  }
+  .month-nav-label:hover { background: #F2EEE3; border-color: #E4E1D8; }
+  .month-nav-label .caret { font-size: 9px; color: var(--brass); transition: transform 0.15s ease; }
+  .month-nav-label.open .caret { transform: rotate(180deg); }
+  .month-picker-panel {
+    position: absolute; top: calc(100% + 6px); left: 0;
+    background: #fff; border: 1px solid #CBC5B4; border-radius: 2px; box-shadow: 0 6px 20px rgba(20,20,10,0.14);
+    padding: 10px; z-index: 20; width: 280px;
+  }
+  .month-picker-year { font-size: 10px; font-weight: 700; color: var(--slate); letter-spacing: 1px; margin: 6px 2px 4px; }
+  .month-picker-year:first-child { margin-top: 0; }
+  .month-picker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+  .month-picker-item {
+    font-size: 11.5px; text-align: center; padding: 6px 2px; border: 1px solid #E4E1D8; border-radius: 2px;
+    background: #FAF8F3; color: var(--ink); cursor: pointer; font-family: inherit; transition: all 0.15s ease;
+  }
+  .month-picker-item:hover { border-color: var(--brass); background: #FBF6EA; }
+  .month-picker-item.active { background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 600; }
+  .month-picker-item.is-today:not(.active) { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .month-nav-today {
+    font-size: 10.5px; color: var(--brass); font-weight: 600; border: 1px solid var(--brass-soft);
+    border-radius: 2px; padding: 4px 9px; cursor: pointer; background: #fff; letter-spacing: 0.3px;
+    transition: all 0.15s ease; font-family: inherit;
+  }
+  .month-nav-today:hover { background: #FBF6EA; }
+
+  .empty-banner {
+    margin: 12px 34px 0; padding: 9px 16px; background: var(--medium-bg); border: 1px solid var(--medium-line);
+    border-left: 2px solid var(--medium); font-size: 12.5px; color: var(--medium);
+  }
+
+  .main-row { display: flex; gap: 22px; align-items: flex-start; padding: 18px 34px 6px; }
+  .main-left { flex: 1 1 auto; min-width: 0; }
+  .main-right { flex: 0 0 296px; }
+
+  .weekday-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; border: 1px solid var(--navy); border-bottom: none; }
+  .weekday-row div {
+    background: var(--navy); color: var(--brass-soft); text-align: center;
+    font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    padding: 7px 0; border-right: 1px solid rgba(255,255,255,0.10);
+  }
+  .weekday-row div:last-child { border-right: none; }
+
+  .grid { display: grid; grid-template-columns: repeat(7, 1fr); border: 1px solid var(--line); }
+  .cell {
+    min-height: 68px; background: var(--card); border: 1px solid var(--line);
+    margin: -1px 0 0 -1px; padding: 6px 7px; position: relative;
+  }
+  .cell.blank { background: #F4F1E9; }
+  .cell.severe { background: var(--severe-bg); }
+  .cell.medium { background: var(--medium-bg); }
+  .cell.severe::before, .cell.medium::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  }
+  .cell.severe::before { background: var(--severe); }
+  .cell.medium::before { background: var(--medium); }
+  .cell .num {
+    font-size: 12.5px; font-weight: 500; color: var(--ink); line-height: 1;
+    font-family: "Noto Serif CJK SC", Georgia, serif;
+  }
+  .cell.weekend .num { color: var(--severe); }
+  .badge {
+    display: inline-block; color: #fff; font-size: 8px; font-weight: 600;
+    letter-spacing: 0.2px; padding: 1px 5px; border-radius: 1px; margin: 4px 0 1px;
+  }
+  .badge.severe { background: var(--severe); }
+  .badge.medium { background: var(--medium); }
+  .cell .label { font-size: 8.5px; color: #545B67; line-height: 1.25; margin: 1px 0 0; }
+
+  .legend-card {
+    background: var(--card); border: 1px solid var(--line);
+  }
+  .legend-title {
+    color: var(--navy-dark); font-weight: 600; font-size: 11px; letter-spacing: 0.3px;
+    padding: 8px 12px; border-bottom: 1px solid var(--line); background: #F2EEE3;
+  }
+  .legend-row { display: flex; align-items: center; gap: 8px; padding: 7px 12px; font-size: 10.5px; color: #3B4250; line-height: 1.4; }
+  .legend-row:not(:last-child) { border-bottom: 1px solid #EFEBE0; }
+  .swatch { width: 11px; height: 11px; flex-shrink: 0; margin-top: 1px; }
+  .swatch.severe { background: var(--severe); }
+  .swatch.medium { background: var(--medium); }
+
+  .callout {
+    background: var(--card); border: 1px solid var(--line); border-top: 2px solid var(--navy);
+    margin: 10px 0 0; padding: 9px 12px;
+  }
+  .callout.sev-severe { border-top-color: var(--severe); }
+  .callout.sev-medium { border-top-color: var(--medium); }
+  .callout .top { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: wrap; }
+  .callout .code {
+    background: var(--navy); color: var(--brass-soft); font-size: 8.5px; font-weight: 600;
+    letter-spacing: 0.4px; padding: 1px 6px;
+  }
+  .callout .title { font-size: 11px; font-weight: 600; color: var(--navy-dark); }
+  .callout .dates { color: var(--severe); font-size: 9.5px; font-weight: 600; margin: 2px 0 3px 0; }
+  .callout .note { font-size: 10px; color: #4A5164; line-height: 1.42; }
+  .no-callout {
+    margin: 10px 0 0; padding: 12px; color: #8A8370; font-size: 11.5px;
+    background: #F4F1E9; border: 1px dashed #D8D2C0; text-align: center;
+  }
+  .footer {
+    padding: 10px 34px 16px; font-size: 10.5px; color: var(--slate);
+    border-top: 1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="page">
+  <div class="header">
+    <button class="lang-toggle" id="langBtn" onclick="toggleLang()">EN</button>
+    <div class="kicker" id="kicker"></div>
+    <h1 id="title"></h1>
+    <div class="sub" id="subtitle"></div>
+    <div class="coverage" id="coverage"></div>
+    <div class="note" id="note"></div>
+  </div>
+  <div class="region-bar" id="regionBar"></div>
+  <div id="emptyBanner"></div>
+  <div class="main-row">
+    <div class="main-left">
+      <div class="weekday-row" id="weekdayRow"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+    <div class="main-right">
+      <div class="legend-card">
+        <div class="legend-title" id="legendTitle"></div>
+        <div class="legend-row"><div class="swatch severe"></div><div id="legendSevere"></div></div>
+        <div class="legend-row"><div class="swatch medium"></div><div id="legendMedium"></div></div>
+      </div>
+      <div id="callouts"></div>
+    </div>
+  </div>
+  <div class="footer" id="footer"></div>
+</div>
+</div>
+
+<script>
+const T = {
+  kicker: { zh: "PLAUD 物流 · 全球运营", en: "PLAUD LOGISTICS · GLOBAL OPS" },
+  subtitle: { zh: "全球尾程停摆假期日历 · 物流团队", en: "Global Last-Mile Holiday Calendar · Logistics Team" },
+  note: {
+    zh: "数据截至发布日;具体承运商截单/停运日以官方公告为准",
+    en: "Data as of publish date; confirm exact carrier cutoff / suspension dates via official announcements"
+  },
+  weekdays: {
+    zh: ["周日","周一","周二","周三","周四","周五","周六"],
+    en: ["SUN","MON","TUE","WED","THU","FRI","SAT"]
+  },
+  legendTitle: { zh: "图例 / 本月重点停摆窗口", en: "Legend / Key Shutdown Windows This Month" },
+  legendSevere: { zh: "全网停运/多日(3天以上) — 需提前1周做发货缓冲", en: "Network-wide shutdown / multi-day (3+ days) — build in 1 week shipping buffer" },
+  legendMedium: { zh: "单日/局部停运 — 当天不派送,次日基本恢复", en: "Single-day / partial suspension — no delivery that day, resumes next day" },
+  noHolidayThisRegion: { zh: "本区域本月暂无标注的假期停摆窗口。", en: "No flagged holiday shutdown window for this region this month." },
+  quietPrefix: { zh: "本月无重大法定假期停摆的国家: ", en: "No major statutory holiday shutdown this month: " },
+  generated: { zh: "生成日期: 2026-08-24 · 已延长覆盖至2027年12月 · 2027年多数农历/浮动假期为预估,以官方公布为准", en: "Generated: 2026-08-24 · Extended through December 2027 · Most 2027 lunar/floating holidays are estimates pending official confirmation" },
+  monthLabel: { zh: "选择月份:", en: "Select month:" },
+  regionLabel: { zh: "按区域筛选:", en: "Filter by region:" },
+  prevMonth: { zh: "上个月", en: "Previous month" },
+  nextMonth: { zh: "下个月", en: "Next month" },
+  todayBtn: { zh: "回到本月", en: "Back to current month" }
+};
+
+function findTodayMonthIdx() {
+  const now = new Date();
+  const id = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+  let idx = MONTHS.findIndex(m => m.id === id);
+  if (idx === -1) {
+    idx = (id < MONTHS[0].id) ? 0 : MONTHS.length - 1;
+  }
+  return idx;
+}
+
+// country metadata: code -> {zh, en}   (composite codes like "UK/DE/IT" are built on the fly, no lookup needed)
+const COUNTRY = {
+  US:{zh:"美国",en:"US"}, CA:{zh:"加拿大",en:"Canada"}, MX:{zh:"墨西哥",en:"Mexico"}, AU:{zh:"澳大利亚",en:"Australia"},
+  UK:{zh:"英国",en:"UK"}, DE:{zh:"德国",en:"Germany"}, FR:{zh:"法国",en:"France"}, ES:{zh:"西班牙",en:"Spain"},
+  IT:{zh:"意大利",en:"Italy"}, PT:{zh:"葡萄牙",en:"Portugal"}, BE:{zh:"比利时",en:"Belgium"}, AT:{zh:"奥地利",en:"Austria"},
+  HK:{zh:"香港",en:"Hong Kong"}, SG:{zh:"新加坡",en:"Singapore"}, MY:{zh:"马来西亚",en:"Malaysia"}, TH:{zh:"泰国",en:"Thailand"},
+  VN:{zh:"越南",en:"Vietnam"}, JP:{zh:"日本",en:"Japan"}, CN:{zh:"中国大陆",en:"Mainland China"}
+};
+
+// region metadata (shared across all months)
+const REGIONS = [
+  { id: "all",     zh: "全部区域", en: "All Regions", codes: ["US","CA","MX","AU","UK","DE","FR","ES","IT","PT","BE","AT","HK","SG","MY","TH","VN","JP","CN"] },
+  { id: "americas",zh: "Americas", en: "Americas",   codes: ["US","CA","MX","AU"],
+    noteZh: "含美国/加拿大/墨西哥/澳大利亚及其他北美、南美国家(如有新增仓/发货国家会补充进来)",
+    noteEn: "Includes US, Canada, Mexico, Australia, and other North/South American countries (added as new warehouses go live)" },
+  { id: "emea",    zh: "EMEA",     en: "EMEA",        codes: ["UK","DE","FR","ES","IT","PT","BE","AT"],
+    noteZh: "以欧洲为主", noteEn: "Primarily Europe" },
+  { id: "me",      zh: "ME",       en: "ME (Middle East)", codes: [],
+    noteZh: "暂无覆盖仓储/发货国家", noteEn: "No warehouse / fulfillment countries covered yet" },
+  { id: "apac",    zh: "APAC",     en: "APAC",        codes: ["HK","SG","MY","TH","VN","JP"],
+    noteZh: "含香港/东南亚/日本", noteEn: "Includes Hong Kong, Southeast Asia, Japan" },
+  { id: "china",   zh: "中国大陆",  en: "Mainland China", codes: ["CN"],
+    noteZh: "单独列示,不计入以上四个区域", noteEn: "Listed separately, not counted in the four regions above" },
+];
+
+// ---------- per-month data ----------
+const MONTHS = [
+  {
+    id: "2026-09",
+    short: { zh: "2026年9月", en: "September 2026" },
+    title: { zh: "2026年9月 全球尾程停摆假期日历", en: "September 2026 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,1,2,3,4,5],
+      [6,7,8,9,10,11,12],
+      [13,14,15,16,17,18,19],
+      [20,21,22,23,24,25,26],
+      [27,28,29,30,0,0,0]
+    ],
+    holidays: {
+      2:  [{country:"VN", region:"apac",     sev:"medium", zh:"越南 国庆日", en:"Vietnam National Day"}],
+      7:  [{country:"US", region:"americas", sev:"medium", zh:"美国 劳动节", en:"US Labor Day"},
+           {country:"CA", region:"americas", sev:"medium", zh:"加拿大 劳动节", en:"Canada Labour Day"}],
+      16: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 独立日", en:"Mexico Independence Day"},
+           {country:"MY", region:"apac",     sev:"medium", zh:"马来西亚 马来西亚日", en:"Malaysia Day"}],
+      19: [{country:"JP", region:"apac", sev:"severe", zh:"日本 Silver Week", en:"Japan Silver Week"}],
+      20: [{country:"JP", region:"apac", sev:"severe", zh:"日本 Silver Week", en:"Japan Silver Week"}],
+      21: [{country:"JP", region:"apac", sev:"severe", zh:"日本 敬老日", en:"Japan Respect for the Aged Day"}],
+      22: [{country:"JP", region:"apac", sev:"severe", zh:"日本 Silver Week", en:"Japan Silver Week (bridge day)"}],
+      23: [{country:"JP", region:"apac", sev:"severe", zh:"日本 秋分节", en:"Japan Autumnal Equinox Day"}],
+      25: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 中秋节", en:"China Mid-Autumn Festival"}],
+      26: [{country:"CN", region:"china", sev:"severe", zh:"中秋假期", en:"Mid-Autumn Holiday"},
+           {country:"HK", region:"apac",  sev:"severe", zh:"香港 中秋翌日", en:"Hong Kong Day After Mid-Autumn"}],
+      27: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 中秋假期", en:"China Mid-Autumn Holiday"}],
+    },
+    callouts: [
+      { region: "apac", sev: "severe", code: "JP",
+        title: { zh: "日本 Silver Week", en: "Japan Silver Week" },
+        dates: { zh: "9月19日(六)-23日(三) 共5天连休", en: "Sep 19 (Sat) - 23 (Wed), 5 consecutive days off" },
+        note: {
+          zh: "Respect for Aged Day(21日)+ Autumnal Equinox(23日)夹周二桥梁假,叠加周末形成罕见5连休,是11年来首次出现,全国性停摆,日本仓建议提前备货、后延时效预期。",
+          en: "Respect for the Aged Day (21st) and Autumnal Equinox Day (23rd) sandwich a Tuesday bridge holiday, combining with the weekend into a rare 5-day break - the first in 11 years. Nationwide shutdown; plan ahead on JP warehouse stock and expect delayed transit times."
+        } },
+      { region: "china", sev: "severe", code: "CN",
+        title: { zh: "中国大陆 中秋节", en: "China Mid-Autumn Festival" },
+        dates: { zh: "9月25日(五)-27日(日) 共3天假期", en: "Sep 25 (Fri) - 27 (Sun), 3-day holiday" },
+        note: {
+          zh: "叠加周末形成3天假期,揽收/头程发运效率下降,香港同期26日(六)为中秋翌日假期。",
+          en: "Combined with the weekend for a 3-day holiday; pickup / first-mile dispatch efficiency drops. Hong Kong observes the day after Mid-Autumn Festival on the 26th (Sat) in the same period."
+        } }
+    ]
+  },
+  {
+    id: "2026-10",
+    short: { zh: "2026年10月", en: "October 2026" },
+    title: { zh: "2026年10月 全球尾程停摆假期日历", en: "October 2026 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,0,1,2,3],
+      [4,5,6,7,8,9,10],
+      [11,12,13,14,15,16,17],
+      [18,19,20,21,22,23,24],
+      [25,26,27,28,29,30,31]
+    ],
+    holidays: {
+      1: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆节", en:"China National Day"}],
+      2: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"}],
+      3: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"},
+          {country:"DE", region:"emea",  sev:"medium", zh:"德国 统一日", en:"German Unity Day"}],
+      4: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"}],
+      5: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"},
+          {country:"PT", region:"emea",  sev:"medium", zh:"葡萄牙 共和国日", en:"Portugal Republic Day"}],
+      6: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"}],
+      7: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期(末日)", en:"China National Day Holiday (last day)"}],
+      12: [{country:"ES", region:"emea",     sev:"medium", zh:"西班牙 国家日", en:"Spain National Day"},
+           {country:"CA", region:"americas", sev:"medium", zh:"加拿大 感恩节", en:"Canada Thanksgiving"}],
+      19: [{country:"HK", region:"apac", sev:"medium", zh:"香港 重阳节", en:"Hong Kong Chung Yeung Festival"}],
+      23: [{country:"TH", region:"apac", sev:"medium", zh:"泰国 五世皇纪念日", en:"Thailand Chulalongkorn Day"}],
+    },
+    callouts: [
+      { region: "china", sev: "severe", code: "CN",
+        title: { zh: "中国大陆 国庆黄金周", en: "China National Day Golden Week" },
+        dates: { zh: "10月1日(四)-7日(三) 共7天假期", en: "Oct 1 (Thu) - 7 (Wed), 7-day holiday" },
+        note: {
+          zh: "全年第二大规模停摆窗口(仅次于春节),头程发运、揽收、报关效率全面下降,建议国庆前1-2周提前备货、放缓国内段计划。",
+          en: "The second-largest annual shutdown window after Chinese New Year. First-mile dispatch, pickup and customs clearance all slow down significantly; plan to build stock 1-2 weeks ahead and pad domestic-leg timelines."
+        } }
+    ]
+  },
+  {
+    id: "2026-11",
+    short: { zh: "2026年11月", en: "November 2026" },
+    title: { zh: "2026年11月 全球尾程停摆假期日历", en: "November 2026 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [1,2,3,4,5,6,7],
+      [8,9,10,11,12,13,14],
+      [15,16,17,18,19,20,21],
+      [22,23,24,25,26,27,28],
+      [29,30,0,0,0,0,0]
+    ],
+    holidays: {
+      1: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 亡灵节", en:"Mexico Día de Muertos"},
+          {country:"FR/ES/IT/PT/BE/AT", region:"emea", sev:"medium", zh:"欧洲六国 万圣节", en:"All Saints' Day (FR/ES/IT/PT/BE/AT)"}],
+      2: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 亡灵节(续)", en:"Mexico Día de Muertos (day 2)"}],
+      8: [{country:"SG/MY", region:"apac", sev:"medium", zh:"新马 屠妖节", en:"Deepavali (SG/MY)"}],
+      11: [{country:"FR/BE", region:"emea", sev:"medium", zh:"法比 停战纪念日", en:"Armistice Day (FR/BE)"}],
+      16: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 革命日", en:"Mexico Revolution Day"}],
+      26: [{country:"US", region:"americas", sev:"severe", zh:"美国 感恩节", en:"US Thanksgiving"}],
+    },
+    callouts: [
+      { region: "americas", sev: "severe", code: "US",
+        title: { zh: "美国 感恩节 & 黑五周", en: "US Thanksgiving & Black Friday Week" },
+        dates: { zh: "11月26日(四)起,当周普遍延迟", en: "From Nov 26 (Thu), delays typical for the entire week" },
+        note: {
+          zh: "感恩节当天及次日(黑五)全网基本停运,叠加黑五/网一订单激增,建议提前1周备货,并对本周时效预期整体后延。",
+          en: "Network-wide shutdown on Thanksgiving Day and the day after (Black Friday), compounded by the Black Friday/Cyber Monday order surge. Build stock 1 week ahead and push back delivery-time expectations for the whole week."
+        } },
+      { region: "americas", sev: "medium", code: "MX",
+        title: { zh: "墨西哥 亡灵节 & 革命日", en: "Mexico Día de Muertos & Revolution Day" },
+        dates: { zh: "11月1-2日、11月16日", en: "Nov 1-2 and Nov 16" },
+        note: {
+          zh: "两个假期相隔较近,11月上半月墨西哥仓/尾程效率会持续偏低,建议合并评估当月墨西哥发货计划。",
+          en: "The two holidays fall close together, so MX warehouse / last-mile throughput stays lower through the first half of November - factor this into the month's MX shipping plan as a whole."
+        } }
+    ]
+  },
+  {
+    id: "2026-12",
+    short: { zh: "2026年12月", en: "December 2026" },
+    title: { zh: "2026年12月 全球尾程停摆假期日历", en: "December 2026 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,1,2,3,4,5],
+      [6,7,8,9,10,11,12],
+      [13,14,15,16,17,18,19],
+      [20,21,22,23,24,25,26],
+      [27,28,29,30,31,0,0]
+    ],
+    holidays: {
+      1: [{country:"PT", region:"emea", sev:"medium", zh:"葡萄牙 恢复独立日", en:"Portugal Restoration of Independence Day"}],
+      6: [{country:"ES", region:"emea", sev:"medium", zh:"西班牙 宪法日", en:"Spain Constitution Day"}],
+      8: [{country:"ES/IT/PT/AT", region:"emea", sev:"medium", zh:"欧洲四国 圣母始胎日", en:"Immaculate Conception Day (ES/IT/PT/AT)"}],
+      10: [{country:"TH", region:"apac", sev:"medium", zh:"泰国 宪法日", en:"Thailand Constitution Day"}],
+      24: [{country:"多国/Multi", region:"emea", sev:"medium", zh:"欧洲多国 平安夜(提前收工)", en:"Christmas Eve (early close, multiple EU countries)"}],
+      25: [{country:"US/CA/MX", region:"americas", sev:"severe", zh:"美加墨 圣诞节", en:"Christmas Day (US/CA/MX)"},
+           {country:"UK/DE/FR/ES/IT/PT/BE/AT", region:"emea", sev:"severe", zh:"欧洲八国 圣诞节", en:"Christmas Day (8 EU countries)"},
+           {country:"SG/MY/HK", region:"apac", sev:"severe", zh:"新马港 圣诞节", en:"Christmas Day (SG/MY/HK)"}],
+      26: [{country:"UK/DE/IT/AT", region:"emea", sev:"severe", zh:"英德意奥 节礼日/圣斯蒂芬日", en:"Boxing Day / St. Stephen's Day (UK/DE/IT/AT)"},
+           {country:"CA", region:"americas", sev:"severe", zh:"加拿大 节礼日", en:"Canada Boxing Day"},
+           {country:"HK", region:"apac", sev:"severe", zh:"香港 节礼日", en:"Hong Kong Boxing Day"}],
+      29: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末休假开始", en:"Japan Year-end Holiday Begins"}],
+      30: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末休假", en:"Japan Year-end Holiday"}],
+      31: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末休假", en:"Japan Year-end Holiday"},
+           {country:"TH", region:"apac", sev:"medium", zh:"泰国 跨年假期开始", en:"Thailand New Year Holiday Begins"}],
+    },
+    callouts: [
+      { region: "all", sev: "severe", code: "GLOBAL",
+        title: { zh: "全球圣诞 + 跨年停摆窗口", en: "Global Christmas & New Year Shutdown Window" },
+        dates: { zh: "12月24日-次年1月1日(部分国家延续到1月上旬)", en: "Dec 24 - Jan 1 (extends into early January for some countries)" },
+        note: {
+          zh: "全年最大规模停摆窗口,覆盖美/加/墨/英/德/法/西/意/葡/比/奥/新/马/港等几乎所有覆盖国家,建议12月18日前完成年内最后一批发货,并预留10天以上缓冲。",
+          en: "The largest annual shutdown window, covering nearly every country in scope - US, Canada, Mexico, UK, Germany, France, Spain, Italy, Portugal, Belgium, Austria, Singapore, Malaysia, Hong Kong and more. Aim to ship the year's last batch by Dec 18 and build in a 10+ day buffer."
+        } },
+      { region: "americas", sev: "medium", code: "AU",
+        title: { zh: "澳大利亚 圣诞停摆期", en: "Australia Christmas Shutdown Period" },
+        dates: { zh: "12月25日起,通常持续到次年1月中旬", en: "From Dec 25, typically lasting until mid-January" },
+        note: {
+          zh: "澳洲传统\"暑假式停摆\",很多企业/仓库整周甚至到1月中才恢复正常,建议按10天以上缓冲规划。",
+          en: "Australia's traditional summer-holiday shutdown - many businesses and warehouses stay closed for a full week or more, sometimes until mid-January. Plan with a 10+ day buffer."
+        } },
+      { region: "apac", sev: "severe", code: "JP",
+        title: { zh: "日本 年末年始", en: "Japan Year-End / New Year Holiday" },
+        dates: { zh: "12月29日起(延续至次年1月上旬)", en: "From Dec 29 (extends into early January)" },
+        note: {
+          zh: "日本全境企业/物流普遍放假约6天,是仅次于春节和黄金周的年度停摆窗口。",
+          en: "Businesses and logistics across Japan close for roughly 6 days - the country's biggest shutdown window after Golden Week and on par with other major holidays."
+        } }
+    ]
+  },
+  {
+    id: "2027-01",
+    short: { zh: "2027年1月", en: "January 2027" },
+    title: { zh: "2027年1月 全球尾程停摆假期日历", en: "January 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,0,0,1,2],
+      [3,4,5,6,7,8,9],
+      [10,11,12,13,14,15,16],
+      [17,18,19,20,21,22,23],
+      [24,25,26,27,28,29,30],
+      [31,0,0,0,0,0,0]
+    ],
+    holidays: {
+      1: [{country:"US/CA/MX", region:"americas", sev:"severe", zh:"美加墨 元旦(圣诞跨年假期延续)", en:"New Year's Day (US/CA/MX, continued from Christmas week)"},
+          {country:"UK/DE/FR/ES/IT/PT/BE/AT", region:"emea", sev:"severe", zh:"欧洲八国 元旦(圣诞跨年假期延续)", en:"New Year's Day (8 EU countries, continued from Christmas week)"},
+          {country:"SG/MY/HK", region:"apac", sev:"severe", zh:"新马港 元旦(圣诞跨年假期延续)", en:"New Year's Day (SG/MY/HK, continued from Christmas week)"},
+          {country:"JP", region:"apac", sev:"severe", zh:"日本 年末年始", en:"Japan Year-end / New Year Holiday"},
+          {country:"AU", region:"americas", sev:"severe", zh:"澳大利亚 圣诞停摆延续", en:"Australia Christmas Shutdown (continued)"},
+          {country:"CN", region:"china", sev:"medium", zh:"中国大陆 元旦", en:"China New Year's Day"},
+          {country:"VN", region:"apac", sev:"medium", zh:"越南 元旦", en:"Vietnam New Year's Day"}],
+      2: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末年始", en:"Japan Year-end / New Year Holiday"}],
+      3: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末年始(末日)", en:"Japan Year-end / New Year Holiday (last day)"}],
+      26: [{country:"AU", region:"americas", sev:"medium", zh:"澳大利亚 澳大利亚日", en:"Australia Day"}],
+    },
+    callouts: [
+      { region: "all", sev: "severe", code: "GLOBAL",
+        title: { zh: "全球圣诞跨年停摆窗口(尾声)", en: "Global Christmas & New Year Shutdown (tail end)" },
+        dates: { zh: "1月1日-3日", en: "Jan 1-3" },
+        note: {
+          zh: "承接12月24日起的圣诞跨年停摆窗口,美加墨/欧洲八国/新马港元旦当天休市,日本年末年始假期延续至1月3日,预计1月第2周运力才逐步恢复正常。",
+          en: "Continuing the shutdown window that began Dec 24. New Year's Day closes US/CA/MX, the 8 EU countries and SG/MY/HK; Japan's year-end holiday runs through Jan 3. Capacity typically normalizes by the second week of January."
+        } },
+      { region: "americas", sev: "medium", code: "AU",
+        title: { zh: "澳大利亚 澳大利亚日", en: "Australia Day" },
+        dates: { zh: "1月26日", en: "Jan 26" },
+        note: {
+          zh: "全国法定假日,当天停运1天,常与前一周的圣诞暑假式停摆连在一起讨论。",
+          en: "National public holiday with a one-day suspension; often discussed together with the preceding Christmas 'summer shutdown' period."
+        } }
+    ]
+  },
+  {
+    id: "2027-02",
+    short: { zh: "2027年2月", en: "February 2027" },
+    title: { zh: "2027年2月 全球尾程停摆假期日历", en: "February 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,1,2,3,4,5,6],
+      [7,8,9,10,11,12,13],
+      [14,15,16,17,18,19,20],
+      [21,22,23,24,25,26,27],
+      [28,0,0,0,0,0,0]
+    ],
+    holidays: {
+      3: [{country:"VN", region:"apac", sev:"severe", zh:"越南 春节假期开始(官方公布2/3-2/11)", en:"Vietnam Tet Holiday Begins (announced Feb 3-11)"}],
+      4: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 春节假期开始(预估,官方安排年底公布)", en:"China Spring Festival Holiday Begins (estimated; official dates TBA)"},
+          {country:"VN", region:"apac", sev:"severe", zh:"越南 春节假期", en:"Vietnam Tet Holiday"}],
+      5: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 春节假期(除夕前后)", en:"China Spring Festival Holiday (around New Year's Eve)"},
+          {country:"VN", region:"apac", sev:"severe", zh:"越南 春节假期", en:"Vietnam Tet Holiday"}],
+      6: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 春节初一", en:"China Lunar New Year's Day"},
+          {country:"VN", region:"apac", sev:"severe", zh:"越南 春节初一", en:"Vietnam Tet Day 1"},
+          {country:"HK", region:"apac", sev:"severe", zh:"香港 农历新年初一", en:"Hong Kong Lunar New Year Day 1"},
+          {country:"SG/MY", region:"apac", sev:"severe", zh:"新马 农历新年初一", en:"Lunar New Year Day 1 (SG/MY)"}],
+      7: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 春节初二", en:"China Spring Festival Day 2"},
+          {country:"VN", region:"apac", sev:"severe", zh:"越南 春节初二", en:"Vietnam Tet Day 2"},
+          {country:"HK", region:"apac", sev:"severe", zh:"香港 农历新年初二(逢周日)", en:"Hong Kong Lunar New Year Day 2 (falls on Sunday)"},
+          {country:"SG/MY", region:"apac", sev:"severe", zh:"新马 农历新年初二", en:"Lunar New Year Day 2 (SG/MY)"}],
+      8: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 春节假期", en:"China Spring Festival Holiday"},
+          {country:"VN", region:"apac", sev:"severe", zh:"越南 春节假期", en:"Vietnam Tet Holiday"},
+          {country:"HK", region:"apac", sev:"severe", zh:"香港 农历新年初三", en:"Hong Kong Lunar New Year Day 3"}],
+      9: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 春节假期", en:"China Spring Festival Holiday"},
+          {country:"VN", region:"apac", sev:"severe", zh:"越南 春节假期", en:"Vietnam Tet Holiday"},
+          {country:"HK", region:"apac", sev:"severe", zh:"香港 农历新年初四(初二逢周日调休)", en:"Hong Kong Lunar New Year Day 4 (substitute for Day 2 falling on Sunday)"}],
+      10: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 春节假期(预估末日)", en:"China Spring Festival Holiday (estimated last day)"},
+           {country:"VN", region:"apac", sev:"severe", zh:"越南 春节假期", en:"Vietnam Tet Holiday"}],
+      11: [{country:"VN", region:"apac", sev:"severe", zh:"越南 春节假期(末日)", en:"Vietnam Tet Holiday (last day)"}],
+    },
+    callouts: [
+      { region: "china", sev: "severe", code: "CN",
+        title: { zh: "中国大陆 春节(全年最大停摆窗口)", en: "China Spring Festival (largest annual shutdown)" },
+        dates: { zh: "预估2月4日-10日左右,农历新年初一为2月6日(官方放假安排预计2026年11-12月公布)", en: "Estimated Feb 4-10; Lunar New Year's Day falls on Feb 6 (official schedule expected Nov-Dec 2026)" },
+        note: {
+          zh: "全年最大规模停摆,普遍7-10天全国性停运,建议春节前1-2周提前备货,节后1-2周产能才逐步恢复,期间订单可考虑改配其他仓发货。",
+          en: "The largest shutdown of the year, typically a 7-10 day nationwide suspension. Build stock 1-2 weeks ahead of the holiday; capacity takes 1-2 weeks after reopening to normalize. Consider rerouting orders to non-CN warehouses during this window."
+        } },
+      { region: "apac", sev: "severe", code: "VN",
+        title: { zh: "越南 春节(全年最大长假)", en: "Vietnam Tet (largest holiday of the year)" },
+        dates: { zh: "官方公布2月3日-11日,共9天", en: "Officially announced Feb 3-11, 9 days" },
+        note: {
+          zh: "工厂/物流全面停摆,是越南全年最大长假,头程发运和尾程派送均受影响,建议节前2周完成关键发货。",
+          en: "Factories and logistics shut down almost entirely - Vietnam's biggest holiday of the year. Both first-mile dispatch and last-mile delivery are affected; complete critical shipments 2 weeks before the holiday."
+        } },
+      { region: "apac", sev: "severe", code: "HK/SG/MY",
+        title: { zh: "香港/新加坡/马来西亚 农历新年", en: "Lunar New Year (HK/SG/MY)" },
+        dates: { zh: "2月6日-9日左右(香港因初二逢周日,初四调休为额外假期)", en: "Around Feb 6-9 (Hong Kong adds a substitute day since Day 2 falls on a Sunday)" },
+        note: {
+          zh: "与中国大陆/越南春节窗口重叠,整个东亚/东南亚在2月上旬同步进入停摆,建议统一规划该区域的春节备货。",
+          en: "Overlaps with the Mainland China / Vietnam holiday window - most of East and Southeast Asia enters shutdown simultaneously in early February. Plan stock for this whole region together."
+        } }
+    ]
+  },
+  {
+    id: "2027-03",
+    short: { zh: "2027年3月", en: "March 2027" },
+    title: { zh: "2027年3月 全球尾程停摆假期日历", en: "March 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,1,2,3,4,5,6],
+      [7,8,9,10,11,12,13],
+      [14,15,16,17,18,19,20],
+      [21,22,23,24,25,26,27],
+      [28,29,30,31,0,0,0]
+    ],
+    holidays: {},
+    callouts: []
+  },
+  {
+    id: "2027-04",
+    short: { zh: "2027年4月", en: "April 2027" },
+    title: { zh: "2027年4月 全球尾程停摆假期日历", en: "April 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,0,1,2,3],
+      [4,5,6,7,8,9,10],
+      [11,12,13,14,15,16,17],
+      [18,19,20,21,22,23,24],
+      [25,26,27,28,29,30,0]
+    ],
+    holidays: {
+      13: [{country:"TH", region:"apac", sev:"severe", zh:"泰国 宋干节(泼水节)", en:"Thailand Songkran Festival"}],
+      14: [{country:"TH", region:"apac", sev:"severe", zh:"泰国 宋干节", en:"Thailand Songkran Festival"}],
+      15: [{country:"TH", region:"apac", sev:"severe", zh:"泰国 宋干节(末日)", en:"Thailand Songkran Festival (last official day)"}],
+      29: [{country:"JP", region:"apac", sev:"severe", zh:"日本 昭和日(黄金周开始)", en:"Japan Showa Day (Golden Week begins)"}],
+      30: [{country:"JP", region:"apac", sev:"severe", zh:"日本 黄金周桥梁假(企业普遍连休)", en:"Japan Golden Week bridge day (widely observed by companies)"}],
+    },
+    callouts: [
+      { region: "apac", sev: "severe", code: "TH",
+        title: { zh: "泰国 宋干节(泼水节)", en: "Thailand Songkran Festival" },
+        dates: { zh: "4月13日-15日官方假期,民间普遍连休5天以上", en: "Apr 13-15 official holiday; widely extended to 5+ days in practice" },
+        note: {
+          zh: "是泰国全年最大停摆窗口,工厂/物流基本停摆,建议节前1周完成关键发货,节后3-5天产能才恢复。",
+          en: "Thailand's biggest shutdown window of the year - factories and logistics grind to a near-halt nationwide. Ship critical orders a week ahead; capacity takes 3-5 days to recover after the holiday."
+        } },
+      { region: "apac", sev: "severe", code: "JP",
+        title: { zh: "日本 黄金周开始(昭和日)", en: "Japan Golden Week Begins (Showa Day)" },
+        dates: { zh: "4月29日(四)起,叠加4月30日企业普遍连休桥梁假", en: "From Apr 29 (Thu), with Apr 30 as a common company bridge day" },
+        note: {
+          zh: "黄金周将连续至5月5日,是日本仅次于年末年始的年度停摆窗口,详见5月日历。",
+          en: "Golden Week runs through May 5 - a nationwide holiday second only to the year-end break. See the May calendar for the remaining days."
+        } }
+    ]
+  },
+  {
+    id: "2027-05",
+    short: { zh: "2027年5月", en: "May 2027" },
+    title: { zh: "2027年5月 全球尾程停摆假期日历", en: "May 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,0,0,0,1],
+      [2,3,4,5,6,7,8],
+      [9,10,11,12,13,14,15],
+      [16,17,18,19,20,21,22],
+      [23,24,25,26,27,28,29],
+      [30,31,0,0,0,0,0]
+    ],
+    holidays: {
+      3: [{country:"JP", region:"apac", sev:"severe", zh:"日本 宪法纪念日(黄金周)", en:"Japan Constitution Memorial Day (Golden Week)"}],
+      4: [{country:"JP", region:"apac", sev:"severe", zh:"日本 绿之日(黄金周)", en:"Japan Greenery Day (Golden Week)"}],
+      5: [{country:"JP", region:"apac", sev:"severe", zh:"日本 儿童节(黄金周末日)", en:"Japan Children's Day (Golden Week, last day)"}],
+    },
+    callouts: [
+      { region: "apac", sev: "severe", code: "JP",
+        title: { zh: "日本 黄金周(5月3日-5日)", en: "Japan Golden Week (May 3-5)" },
+        dates: { zh: "4月29日-5月5日共7天(含周末),企业普遍全员放假", en: "Apr 29 - May 5, 7 days including weekends; most companies close entirely" },
+        note: {
+          zh: "日本全境企业/物流基本停摆一周,是全年最长的连续假期之一,建议节前2周完成日本仓相关发货与到仓安排。",
+          en: "Businesses and logistics across Japan shut down for roughly a week - one of the longest continuous holidays of the year. Complete JP-warehouse-related shipments and inbound arrangements 2 weeks ahead."
+        } }
+    ]
+  },
+  {
+    id: "2027-06",
+    short: { zh: "2027年6月", en: "June 2027" },
+    title: { zh: "2027年6月 全球尾程停摆假期日历", en: "June 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,1,2,3,4,5],
+      [6,7,8,9,10,11,12],
+      [13,14,15,16,17,18,19],
+      [20,21,22,23,24,25,26],
+      [27,28,29,30,0,0,0]
+    ],
+    holidays: {},
+    callouts: []
+  },
+  {
+    id: "2027-07",
+    short: { zh: "2027年7月", en: "July 2027" },
+    title: { zh: "2027年7月 全球尾程停摆假期日历", en: "July 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,0,1,2,3],
+      [4,5,6,7,8,9,10],
+      [11,12,13,14,15,16,17],
+      [18,19,20,21,22,23,24],
+      [25,26,27,28,29,30,31]
+    ],
+    holidays: {},
+    callouts: []
+  },
+  {
+    id: "2027-08",
+    short: { zh: "2027年8月", en: "August 2027" },
+    title: { zh: "2027年8月 全球尾程停摆假期日历", en: "August 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [1,2,3,4,5,6,7],
+      [8,9,10,11,12,13,14],
+      [15,16,17,18,19,20,21],
+      [22,23,24,25,26,27,28],
+      [29,30,31,0,0,0,0]
+    ],
+    holidays: {
+      13: [{country:"JP", region:"apac", sev:"medium", zh:"日本 盂兰盆节开始(非法定,民俗性长假)", en:"Japan Obon Holiday Begins (not statutory, widely observed)"}],
+      14: [{country:"JP", region:"apac", sev:"medium", zh:"日本 盂兰盆节", en:"Japan Obon Holiday"}],
+      15: [{country:"JP", region:"apac", sev:"medium", zh:"日本 盂兰盆节", en:"Japan Obon Holiday"}],
+      16: [{country:"JP", region:"apac", sev:"medium", zh:"日本 盂兰盆节(末日)", en:"Japan Obon Holiday (last day)"}],
+    },
+    callouts: [
+      { region: "apac", sev: "medium", code: "JP",
+        title: { zh: "日本 盂兰盆节(Obon)", en: "Japan Obon Holiday" },
+        dates: { zh: "8月13日-16日左右(非法定假日,具体年年略有浮动)", en: "Around Aug 13-16 (not a statutory holiday; dates shift slightly year to year)" },
+        note: {
+          zh: "非法定假日但全国性民俗长假,工厂/中小企业普遍停工,大型快递时效在此期间明显变慢。",
+          en: "Not a statutory holiday, but a widely observed traditional break - factories and SMEs commonly close, and major carriers see noticeably slower transit times."
+        } }
+    ]
+  },
+  {
+    id: "2027-09",
+    short: { zh: "2027年9月", en: "September 2027" },
+    title: { zh: "2027年9月 全球尾程停摆假期日历", en: "September 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,1,2,3,4],
+      [5,6,7,8,9,10,11],
+      [12,13,14,15,16,17,18],
+      [19,20,21,22,23,24,25],
+      [26,27,28,29,30,0,0]
+    ],
+    holidays: {
+      2: [{country:"VN", region:"apac", sev:"medium", zh:"越南 国庆日", en:"Vietnam National Day"}],
+      6: [{country:"US", region:"americas", sev:"medium", zh:"美国 劳动节", en:"US Labor Day"},
+          {country:"CA", region:"americas", sev:"medium", zh:"加拿大 劳动节", en:"Canada Labour Day"}],
+      15: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 中秋节(预估,官方调休安排待公布)", en:"China Mid-Autumn Festival (estimated; make-up-day arrangement TBA)"}],
+      16: [{country:"HK", region:"apac", sev:"severe", zh:"香港 中秋节翌日", en:"Hong Kong Day After Mid-Autumn"},
+           {country:"MY", region:"apac", sev:"medium", zh:"马来西亚 马来西亚日", en:"Malaysia Day"}],
+      20: [{country:"JP", region:"apac", sev:"severe", zh:"日本 敬老日", en:"Japan Respect for the Aged Day"}],
+      23: [{country:"JP", region:"apac", sev:"severe", zh:"日本 秋分节(与敬老日不连休)", en:"Japan Autumnal Equinox Day (no bridge with Respect for the Aged Day this year)"}],
+    },
+    callouts: [
+      { region: "china", sev: "severe", code: "CN",
+        title: { zh: "中国大陆 中秋节", en: "China Mid-Autumn Festival" },
+        dates: { zh: "预计9月15日(三),官方调休安排尚未公布", en: "Expected Sep 15 (Wed); official make-up-day arrangement not yet announced" },
+        note: {
+          zh: "揽收/头程发运效率下降,香港同期16日(四)为中秋翌日假期,建议关注官方公布的具体调休安排以确认是否连成3天假期。",
+          en: "Pickup / first-mile dispatch efficiency drops. Hong Kong observes the day after Mid-Autumn Festival on the 16th (Thu) in the same period. Watch for the official announcement to confirm whether this becomes a 3-day break."
+        } },
+      { region: "apac", sev: "severe", code: "JP",
+        title: { zh: "日本 敬老日 & 秋分节(2027年不连休)", en: "Japan Respect for the Aged Day & Autumnal Equinox (no bridge in 2027)" },
+        dates: { zh: "9月20日(一)、9月23日(四),中间隔2个工作日", en: "Sep 20 (Mon) and Sep 23 (Thu), two working days apart" },
+        note: {
+          zh: "与2026年出现的罕见Silver Week 5连休不同,2027年这两个假日相隔较远,不构成连休,按两个独立单日停运处理即可。",
+          en: "Unlike 2026's rare 5-day Silver Week, these two holidays fall far enough apart in 2027 that no bridge is created - treat them as two separate single-day suspensions."
+        } }
+    ]
+  },
+  {
+    id: "2027-10",
+    short: { zh: "2027年10月", en: "October 2027" },
+    title: { zh: "2027年10月 全球尾程停摆假期日历", en: "October 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,0,0,1,2],
+      [3,4,5,6,7,8,9],
+      [10,11,12,13,14,15,16],
+      [17,18,19,20,21,22,23],
+      [24,25,26,27,28,29,30],
+      [31,0,0,0,0,0,0]
+    ],
+    holidays: {
+      1: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆节", en:"China National Day"},
+          {country:"HK", region:"apac", sev:"medium", zh:"香港 国庆日", en:"Hong Kong National Day"}],
+      2: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"}],
+      3: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"},
+          {country:"DE", region:"emea", sev:"medium", zh:"德国 统一日", en:"German Unity Day"}],
+      4: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"}],
+      5: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"},
+          {country:"PT", region:"emea", sev:"medium", zh:"葡萄牙 共和国日", en:"Portugal Republic Day"}],
+      6: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期", en:"China National Day Holiday"}],
+      7: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 国庆假期(预估末日)", en:"China National Day Holiday (estimated last day)"}],
+      8: [{country:"HK", region:"apac", sev:"medium", zh:"香港 重阳节", en:"Hong Kong Chung Yeung Festival"}],
+      11: [{country:"CA", region:"americas", sev:"medium", zh:"加拿大 感恩节", en:"Canada Thanksgiving"}],
+      12: [{country:"ES", region:"emea", sev:"medium", zh:"西班牙 国家日", en:"Spain National Day"}],
+      23: [{country:"TH", region:"apac", sev:"medium", zh:"泰国 五世皇纪念日", en:"Thailand Chulalongkorn Day"}],
+      28: [{country:"SG/MY", region:"apac", sev:"medium", zh:"新马 屠妖节", en:"Deepavali (SG/MY)"}],
+    },
+    callouts: [
+      { region: "china", sev: "severe", code: "CN",
+        title: { zh: "中国大陆 国庆黄金周", en: "China National Day Golden Week" },
+        dates: { zh: "预计10月1日-7日(具体调休安排以官方公布为准)", en: "Expected Oct 1-7 (exact make-up-day schedule pending official announcement)" },
+        note: {
+          zh: "全年第二大规模停摆窗口,头程发运、揽收、报关效率全面下降,建议国庆前1-2周提前备货、放缓国内段计划。",
+          en: "The second-largest annual shutdown window after Spring Festival. First-mile dispatch, pickup and customs clearance all slow down significantly; plan to build stock 1-2 weeks ahead and pad domestic-leg timelines."
+        } },
+      { region: "americas", sev: "medium", code: "CA",
+        title: { zh: "加拿大 感恩节", en: "Canada Thanksgiving" },
+        dates: { zh: "10月11日(周一)", en: "Oct 11 (Mon)" },
+        note: {
+          zh: "全国性假日,快递停运1天,常与前后其他假日连在一起讨论。",
+          en: "National holiday with a one-day suspension; often discussed alongside nearby holidays."
+        } },
+      { region: "apac", sev: "medium", code: "SG/MY",
+        title: { zh: "新加坡/马来西亚 屠妖节", en: "Deepavali (SG/MY)" },
+        dates: { zh: "10月28日(四,待官方最终确认,两国公布日期可能相差1天)", en: "Oct 28 (Thu); pending final official confirmation - the two countries' gazetted dates may differ by a day" },
+        note: {
+          zh: "法定假日,影响相对较小,建议提前确认当年官方公布的具体日期。",
+          en: "A public holiday with relatively limited impact, but confirm the exact officially gazetted date closer to the time."
+        } }
+    ]
+  },
+  {
+    id: "2027-11",
+    short: { zh: "2027年11月", en: "November 2027" },
+    title: { zh: "2027年11月 全球尾程停摆假期日历", en: "November 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,1,2,3,4,5,6],
+      [7,8,9,10,11,12,13],
+      [14,15,16,17,18,19,20],
+      [21,22,23,24,25,26,27],
+      [28,29,30,0,0,0,0]
+    ],
+    holidays: {
+      1: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 亡灵节", en:"Mexico Día de Muertos"},
+          {country:"FR/ES/IT/PT/BE/AT", region:"emea", sev:"medium", zh:"欧洲六国 万圣节", en:"All Saints' Day (FR/ES/IT/PT/BE/AT)"}],
+      2: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 亡灵节(续)", en:"Mexico Día de Muertos (day 2)"}],
+      11: [{country:"FR/BE", region:"emea", sev:"medium", zh:"法比 停战纪念日", en:"Armistice Day (FR/BE)"}],
+      15: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 革命日", en:"Mexico Revolution Day"}],
+      25: [{country:"US", region:"americas", sev:"severe", zh:"美国 感恩节", en:"US Thanksgiving"}],
+    },
+    callouts: [
+      { region: "americas", sev: "severe", code: "US",
+        title: { zh: "美国 感恩节 & 黑五周", en: "US Thanksgiving & Black Friday Week" },
+        dates: { zh: "11月25日(四)起,当周普遍延迟", en: "From Nov 25 (Thu), delays typical for the entire week" },
+        note: {
+          zh: "感恩节当天及次日(黑五)全网基本停运,叠加黑五/网一订单激增,建议提前1周备货,并对本周时效预期整体后延。",
+          en: "Network-wide shutdown on Thanksgiving Day and the day after (Black Friday), compounded by the Black Friday/Cyber Monday order surge. Build stock 1 week ahead and push back delivery-time expectations for the whole week."
+        } },
+      { region: "americas", sev: "medium", code: "MX",
+        title: { zh: "墨西哥 亡灵节 & 革命日", en: "Mexico Día de Muertos & Revolution Day" },
+        dates: { zh: "11月1-2日、11月15日", en: "Nov 1-2 and Nov 15" },
+        note: {
+          zh: "两个假期相隔较近,11月上半月墨西哥仓/尾程效率会持续偏低,建议合并评估当月墨西哥发货计划。",
+          en: "The two holidays fall close together, so MX warehouse / last-mile throughput stays lower through the first half of November - factor this into the month's MX shipping plan as a whole."
+        } }
+    ]
+  },
+  {
+    id: "2027-12",
+    short: { zh: "2027年12月", en: "December 2027" },
+    title: { zh: "2027年12月 全球尾程停摆假期日历", en: "December 2027 Global Last-Mile Holiday Calendar" },
+    weeks: [
+      [0,0,0,1,2,3,4],
+      [5,6,7,8,9,10,11],
+      [12,13,14,15,16,17,18],
+      [19,20,21,22,23,24,25],
+      [26,27,28,29,30,31,0]
+    ],
+    holidays: {
+      1: [{country:"PT", region:"emea", sev:"medium", zh:"葡萄牙 恢复独立日", en:"Portugal Restoration of Independence Day"}],
+      6: [{country:"ES", region:"emea", sev:"medium", zh:"西班牙 宪法日", en:"Spain Constitution Day"}],
+      8: [{country:"ES/IT/PT/AT", region:"emea", sev:"medium", zh:"欧洲四国 圣母始胎日", en:"Immaculate Conception Day (ES/IT/PT/AT)"}],
+      10: [{country:"TH", region:"apac", sev:"medium", zh:"泰国 宪法日", en:"Thailand Constitution Day"}],
+      24: [{country:"多国/Multi", region:"emea", sev:"medium", zh:"欧洲多国 平安夜(提前收工)", en:"Christmas Eve (early close, multiple EU countries)"}],
+      25: [{country:"US/CA/MX", region:"americas", sev:"severe", zh:"美加墨 圣诞节", en:"Christmas Day (US/CA/MX)"},
+           {country:"UK/DE/FR/ES/IT/PT/BE/AT", region:"emea", sev:"severe", zh:"欧洲八国 圣诞节", en:"Christmas Day (8 EU countries)"},
+           {country:"SG/MY/HK", region:"apac", sev:"severe", zh:"新马港 圣诞节", en:"Christmas Day (SG/MY/HK)"},
+           {country:"AU", region:"americas", sev:"severe", zh:"澳大利亚 圣诞节(暑假式停摆开始)", en:"Christmas Day (Australia summer shutdown begins)"}],
+      26: [{country:"UK/DE/IT/AT", region:"emea", sev:"severe", zh:"英德意奥 节礼日/圣斯蒂芬日", en:"Boxing Day / St. Stephen's Day (UK/DE/IT/AT)"},
+           {country:"CA", region:"americas", sev:"severe", zh:"加拿大 节礼日", en:"Canada Boxing Day"},
+           {country:"HK", region:"apac", sev:"severe", zh:"香港 节礼日", en:"Hong Kong Boxing Day"}],
+      29: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末休假开始", en:"Japan Year-end Holiday Begins"}],
+      30: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末休假", en:"Japan Year-end Holiday"}],
+      31: [{country:"JP", region:"apac", sev:"severe", zh:"日本 年末休假", en:"Japan Year-end Holiday"},
+           {country:"TH", region:"apac", sev:"medium", zh:"泰国 跨年假期开始", en:"Thailand New Year Holiday Begins"}],
+    },
+    callouts: [
+      { region: "all", sev: "severe", code: "GLOBAL",
+        title: { zh: "全球圣诞 + 跨年停摆窗口", en: "Global Christmas & New Year Shutdown Window" },
+        dates: { zh: "12月24日-2028年1月1日(部分国家延续到1月上旬)", en: "Dec 24, 2027 - Jan 1, 2028 (extends into early January for some countries)" },
+        note: {
+          zh: "全年最大规模停摆窗口,覆盖美/加/墨/英/德/法/西/意/葡/比/奥/新/马/港等几乎所有覆盖国家,建议12月18日前完成年内最后一批发货,并预留10天以上缓冲。",
+          en: "The largest annual shutdown window, covering nearly every country in scope - US, Canada, Mexico, UK, Germany, France, Spain, Italy, Portugal, Belgium, Austria, Singapore, Malaysia, Hong Kong and more. Aim to ship the year's last batch by Dec 18 and build in a 10+ day buffer."
+        } },
+      { region: "americas", sev: "medium", code: "AU",
+        title: { zh: "澳大利亚 圣诞停摆期", en: "Australia Christmas Shutdown Period" },
+        dates: { zh: "12月25日起,通常持续到次年1月中旬", en: "From Dec 25, typically lasting until mid-January" },
+        note: {
+          zh: "澳洲传统\"暑假式停摆\",很多企业/仓库整周甚至到1月中才恢复正常,建议按10天以上缓冲规划。",
+          en: "Australia's traditional summer-holiday shutdown - many businesses and warehouses stay closed for a full week or more, sometimes until mid-January. Plan with a 10+ day buffer."
+        } },
+      { region: "apac", sev: "severe", code: "JP",
+        title: { zh: "日本 年末年始", en: "Japan Year-End / New Year Holiday" },
+        dates: { zh: "12月29日起(延续至2028年1月上旬)", en: "From Dec 29 (extends into early January 2028)" },
+        note: {
+          zh: "日本全境企业/物流普遍放假约6天,是仅次于春节和黄金周的年度停摆窗口。",
+          en: "Businesses and logistics across Japan close for roughly 6 days - the country's biggest shutdown window after Golden Week and on par with other major holidays."
+        } }
+    ]
+  }
+];
+
+let lang = "zh";
+let regionId = "all";
+let monthIdx = 0; // index into MONTHS, default to first month (September)
+let monthPickerOpen = false;
+
+function currentRegion() { return REGIONS.find(r => r.id === regionId); }
+function currentMonth() { return MONTHS[monthIdx]; }
+
+function filteredItems(day) {
+  const items = currentMonth().holidays[day] || [];
+  if (regionId === "all") return items;
+  return items.filter(h => h.region === regionId);
+}
+
+function render() {
+  const region = currentRegion();
+  const month = currentMonth();
+
+  document.getElementById("kicker").textContent = T.kicker[lang];
+  document.getElementById("title").textContent = month.title[lang];
+  document.getElementById("subtitle").textContent = T.subtitle[lang];
+  document.getElementById("note").textContent = T.note[lang];
+  document.getElementById("legendTitle").textContent = T.legendTitle[lang];
+  document.getElementById("legendSevere").textContent = T.legendSevere[lang];
+  document.getElementById("legendMedium").textContent = T.legendMedium[lang];
+  document.getElementById("langBtn").textContent = lang === "zh" ? "EN" : "中文";
+
+  // coverage line: full list on "all", region-specific list otherwise
+  let coverageText;
+  if (regionId === "all") {
+    const names = region.codes.map(c => COUNTRY[c][lang]).join(lang === "zh" ? " " : ", ");
+    coverageText = (lang === "zh" ? "覆盖仓库/发货国家: " : "Coverage (current warehouse / fulfillment countries): ") + names;
+  } else {
+    const names = region.codes.map(c => COUNTRY[c][lang]).join(lang === "zh" ? " " : ", ");
+    const extra = lang === "zh" ? region.noteZh : region.noteEn;
+    coverageText = (region.codes.length ? names + " — " : "") + extra;
+  }
+  document.getElementById("coverage").textContent = coverageText;
+
+  // filter bar: month select + region select
+  const bar = document.getElementById("regionBar");
+  bar.innerHTML = "";
+
+  const mnav = document.createElement("div");
+  mnav.className = "month-nav";
+
+  const prevBtn = document.createElement("button");
+  prevBtn.className = "month-nav-btn";
+  prevBtn.textContent = "‹";
+  prevBtn.setAttribute("aria-label", T.prevMonth[lang]);
+  prevBtn.title = T.prevMonth[lang];
+  prevBtn.disabled = monthIdx <= 0;
+  prevBtn.onclick = () => { if (monthIdx > 0) { monthIdx -= 1; render(); } };
+  mnav.appendChild(prevBtn);
+
+  const todayIdxForPicker = findTodayMonthIdx();
+
+  const mPicker = document.createElement("div");
+  mPicker.className = "month-picker";
+
+  const mLabel = document.createElement("button");
+  mLabel.className = "month-nav-label" + (monthPickerOpen ? " open" : "");
+  mLabel.innerHTML = `<span>${month.short[lang]}</span><span class="caret">▾</span>`;
+  mLabel.onclick = (e) => { e.stopPropagation(); monthPickerOpen = !monthPickerOpen; render(); };
+  mPicker.appendChild(mLabel);
+
+  mnav.appendChild(mPicker);
+
+  if (monthPickerOpen) {
+    const panel = document.createElement("div");
+    panel.className = "month-picker-panel";
+    panel.onclick = (e) => e.stopPropagation();
+
+    let lastYear = null;
+    let yearGrid = null;
+    MONTHS.forEach((m, i) => {
+      const y = m.id.slice(0, 4);
+      if (y !== lastYear) {
+        lastYear = y;
+        const yh = document.createElement("div");
+        yh.className = "month-picker-year";
+        yh.textContent = (lang === "zh" ? y + "年" : y);
+        panel.appendChild(yh);
+        yearGrid = document.createElement("div");
+        yearGrid.className = "month-picker-grid";
+        panel.appendChild(yearGrid);
+      }
+      const item = document.createElement("div");
+      item.className = "month-picker-item"
+        + (i === monthIdx ? " active" : "")
+        + (i === todayIdxForPicker ? " is-today" : "");
+      const mNum = m.id.slice(5, 7).replace(/^0/, "");
+      item.textContent = lang === "zh" ? (mNum + "月") : m.short.en.split(" ")[0].slice(0, 3);
+      item.title = m.short[lang];
+      item.onclick = () => { monthIdx = i; monthPickerOpen = false; render(); };
+      yearGrid.appendChild(item);
+    });
+    // anchor the panel to the whole nav group (flush with the bar's left edge),
+    // not to the label button, so it lines up with the grid/filter bar below it
+    mnav.appendChild(panel);
+  }
+
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "month-nav-btn";
+  nextBtn.textContent = "›";
+  nextBtn.setAttribute("aria-label", T.nextMonth[lang]);
+  nextBtn.title = T.nextMonth[lang];
+  nextBtn.disabled = monthIdx >= MONTHS.length - 1;
+  nextBtn.onclick = () => { if (monthIdx < MONTHS.length - 1) { monthIdx += 1; render(); } };
+  mnav.appendChild(nextBtn);
+
+  bar.appendChild(mnav);
+
+  const todayIdx = findTodayMonthIdx();
+  if (todayIdx !== monthIdx) {
+    const todayBtn = document.createElement("button");
+    todayBtn.className = "month-nav-today";
+    todayBtn.textContent = T.todayBtn[lang];
+    todayBtn.onclick = () => { monthIdx = todayIdx; render(); };
+    bar.appendChild(todayBtn);
+  }
+
+  const divider = document.createElement("div");
+  divider.className = "bar-divider";
+  bar.appendChild(divider);
+
+  const rlabel = document.createElement("span");
+  rlabel.className = "rlabel";
+  rlabel.textContent = T.regionLabel[lang];
+  bar.appendChild(rlabel);
+
+  const wrap = document.createElement("div");
+  wrap.className = "region-select-wrap";
+  const select = document.createElement("select");
+  select.className = "region-select";
+  REGIONS.forEach(r => {
+    const opt = document.createElement("option");
+    opt.value = r.id;
+    opt.textContent = lang === "zh" ? r.zh : r.en;
+    if (r.id === regionId) opt.selected = true;
+    select.appendChild(opt);
+  });
+  select.onchange = (e) => { regionId = e.target.value; render(); };
+  wrap.appendChild(select);
+  bar.appendChild(wrap);
+
+  const hint = document.createElement("span");
+  hint.className = "region-badge-hint";
+  const codeCount = region.codes.length;
+  hint.textContent = lang === "zh"
+    ? (codeCount ? `当前区域覆盖 ${codeCount} 个国家/地区` : "当前区域暂无覆盖国家/地区")
+    : (codeCount ? `${codeCount} countries/regions in this filter` : "No countries/regions in this filter yet");
+  bar.appendChild(hint);
+
+  // empty banner for ME (or any region with zero codes)
+  const banner = document.getElementById("emptyBanner");
+  banner.innerHTML = "";
+  if (regionId !== "all" && region.codes.length === 0) {
+    const div = document.createElement("div");
+    div.className = "empty-banner";
+    div.textContent = lang === "zh"
+      ? `${region.zh} 目前暂无覆盖仓储/发货国家,以下日历留作后续该区域开仓后使用。`
+      : `${region.en} currently has no warehouse / fulfillment countries covered. This calendar view is reserved for future use once a warehouse opens here.`;
+    banner.appendChild(div);
+  }
+
+  const wr = document.getElementById("weekdayRow");
+  wr.innerHTML = "";
+  T.weekdays[lang].forEach(w => {
+    const d = document.createElement("div");
+    d.textContent = w;
+    wr.appendChild(d);
+  });
+
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  month.weeks.forEach((week) => {
+    week.forEach((day, c) => {
+      const cell = document.createElement("div");
+      const isWeekend = (c === 0 || c === 6);
+      if (day === 0) {
+        cell.className = "cell blank";
+      } else {
+        const items = filteredItems(day);
+        const sev = items.some(h => h.sev === "severe") ? "severe" : (items.some(h => h.sev === "medium") ? "medium" : "");
+        cell.className = "cell" + (sev ? " " + sev : "") + (isWeekend ? " weekend" : "");
+        const num = document.createElement("div");
+        num.className = "num";
+        num.textContent = day;
+        cell.appendChild(num);
+        items.slice(0,3).forEach(h => {
+          const badge = document.createElement("div");
+          badge.className = "badge " + h.sev;
+          badge.textContent = h.country;
+          cell.appendChild(badge);
+          const label = document.createElement("div");
+          label.className = "label";
+          label.textContent = h[lang];
+          cell.appendChild(label);
+        });
+      }
+      grid.appendChild(cell);
+    });
+  });
+
+  // callouts filtered by region (region:"all" callouts always show)
+  const co = document.getElementById("callouts");
+  co.innerHTML = "";
+  const visibleCallouts = (month.callouts || []).filter(c => c.region === "all" || regionId === "all" || c.region === regionId);
+  if (visibleCallouts.length === 0) {
+    const div = document.createElement("div");
+    div.className = "no-callout";
+    div.textContent = T.noHolidayThisRegion[lang];
+    co.appendChild(div);
+  } else {
+    visibleCallouts.forEach(c => {
+      const box = document.createElement("div");
+      box.className = "callout sev-" + c.sev;
+      box.innerHTML = `
+        <div class="top">
+          <div class="code">${c.code}</div>
+          <div class="title">${c.title[lang]}</div>
+        </div>
+        <div class="dates">${c.dates[lang]}</div>
+        <div class="note">${c.note[lang]}</div>
+      `;
+      co.appendChild(box);
+    });
+  }
+
+  // footer: quiet countries in current region scope (no holiday this month)
+  const scopeCodes = region.codes;
+  const activeCodes = new Set();
+  Object.values(month.holidays).forEach(items => items.forEach(h => {
+    h.country.split("/").forEach(code => activeCodes.add(code));
+  }));
+  const quiet = scopeCodes.filter(c => !activeCodes.has(c));
+  let footerText = T.note[lang] + " · " + T.generated[lang];
+  if (quiet.length) {
+    const names = quiet.map(c => COUNTRY[c][lang]).join(lang === "zh" ? "、" : ", ");
+    footerText = T.quietPrefix[lang] + names + " · " + footerText;
+  }
+  document.getElementById("footer").textContent = footerText;
+}
+
+function toggleLang() {
+  lang = (lang === "zh") ? "en" : "zh";
+  render();
+}
+
+document.addEventListener("click", () => {
+  if (monthPickerOpen) { monthPickerOpen = false; render(); }
+});
+
+render();
+</script>
+</body>
+</html>
