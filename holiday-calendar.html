@@ -309,7 +309,7 @@ const WAREHOUSE_MONTH = {
   monthLabel: { zh: "2026年9月", en: "September 2026" },
   sourceNote: { zh: "数据来源: 飞书《Holiday Schedule - Overseas Warehouses》表(万邑通/谷仓等仓库方填报)", en: "Source: Feishu \"Holiday Schedule - Overseas Warehouses\" sheet (filed by warehouse operators incl. 万邑通/谷仓)" },
   regions: [
-    { id: "americas", zh: "Americas", en: "Americas", warehouses: [
+    { id: "americas", zh: "美洲", en: "Americas", warehouses: [
       { code: "USKY3/USKY5", country: "US", countryZh: "美国", holidays: [
         { zh: "劳动节 Labor Day", en: "Labor Day", date: { zh: "9月7日(周一)", en: "Sep 7 (Mon)" },
           note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
@@ -359,12 +359,12 @@ const COUNTRY = {
 // region metadata (shared across all months)
 const REGIONS = [
   { id: "all",     zh: "全部区域", en: "All Regions", codes: ["US","CA","MX","AU","UK","DE","FR","ES","IT","PT","BE","AT","HK","SG","MY","TH","VN","JP","CN"] },
-  { id: "americas",zh: "Americas", en: "Americas",   codes: ["US","CA","MX","AU"],
+  { id: "americas",zh: "美洲", en: "Americas",   codes: ["US","CA","MX","AU"],
     noteZh: "含美国/加拿大/墨西哥/澳大利亚及其他北美、南美国家(如有新增仓/发货国家会补充进来)",
     noteEn: "Includes US, Canada, Mexico, Australia, and other North/South American countries (added as new warehouses go live)" },
   { id: "emea",    zh: "EMEA",     en: "EMEA",        codes: ["UK","DE","FR","ES","IT","PT","BE","AT"],
     noteZh: "以欧洲为主", noteEn: "Primarily Europe" },
-  { id: "me",      zh: "ME",       en: "ME (Middle East)", codes: [],
+  { id: "me",      zh: "中东(ME)",       en: "ME (Middle East)", codes: [],
     noteZh: "暂无覆盖仓储/发货国家", noteEn: "No warehouse / fulfillment countries covered yet" },
   { id: "apac",    zh: "APAC",     en: "APAC",        codes: ["HK","SG","MY","TH","VN","JP"],
     noteZh: "含香港/东南亚/日本", noteEn: "Includes Hong Kong, Southeast Asia, Japan" },
