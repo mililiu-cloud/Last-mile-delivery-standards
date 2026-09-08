@@ -56,6 +56,31 @@
     cursor: pointer; letter-spacing: 1px; transition: all 0.15s ease;
   }
   .lang-toggle:hover { background: rgba(216,199,154,0.12); border-color: var(--brass-soft); }
+  .view-toggle {
+    position: absolute; top: 22px; right: 100px;
+    background: transparent; border: 1px solid rgba(216,199,154,0.55);
+    color: var(--brass-soft); border-radius: 2px; padding: 6px 16px; font-size: 11.5px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.5px; transition: all 0.15s ease; font-family: inherit;
+  }
+  .view-toggle:hover { background: rgba(216,199,154,0.12); border-color: var(--brass-soft); }
+
+  .wh-region { margin: 0 0 16px; }
+  .wh-region-title {
+    font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--navy-dark); padding: 6px 0; border-bottom: 1px solid var(--brass-soft); margin-bottom: 10px;
+  }
+  .wh-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .wh-card { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 10px 12px; }
+  .wh-card.has-holiday { border-color: var(--medium-line); background: var(--medium-bg); }
+  .wh-card .wh-code { font-size: 14px; font-weight: 600; color: var(--navy-dark); font-family: "Noto Serif CJK SC", Georgia, serif; }
+  .wh-card .wh-country { display: inline-block; font-size: 9.5px; font-weight: 600; color: var(--slate); background: #F2EEE3; border: 1px solid var(--line); border-radius: 1px; padding: 1px 6px; margin-left: 6px; vertical-align: 1px; }
+  .wh-card .wh-holiday { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--medium-line); }
+  .wh-card .wh-holiday:first-of-type { border-top: none; padding-top: 0; }
+  .wh-card .wh-hname { font-size: 11.5px; font-weight: 600; color: var(--medium); }
+  .wh-card .wh-hdate { font-size: 10.5px; color: #3B4250; margin-top: 1px; }
+  .wh-card .wh-hnote { font-size: 9.5px; color: #6B5A2E; margin-top: 2px; line-height: 1.35; }
+  .wh-card .wh-quiet { font-size: 10.5px; color: #8A8370; margin-top: 6px; }
+  .wh-month-label { font-size: 13px; font-weight: 600; color: var(--navy-dark); margin: 0 0 14px; font-family: "Noto Serif CJK SC", Georgia, serif; }
 
   .region-bar {
     display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
@@ -210,6 +235,7 @@
 <div class="page">
   <div class="header">
     <button class="lang-toggle" id="langBtn" onclick="toggleLang()">EN</button>
+    <button class="view-toggle" id="viewBtn" onclick="toggleView()">仓库视图</button>
     <div class="kicker" id="kicker"></div>
     <h1 id="title"></h1>
     <div class="sub" id="subtitle"></div>
@@ -217,22 +243,25 @@
     <div class="note" id="note"></div>
   </div>
   <div class="region-bar" id="regionBar"></div>
-  <div id="emptyBanner"></div>
-  <div class="main-row">
-    <div class="main-left">
-      <div class="weekday-row" id="weekdayRow"></div>
-      <div class="grid" id="grid"></div>
-    </div>
-    <div class="main-right">
-      <div class="legend-card">
-        <div class="legend-title" id="legendTitle"></div>
-        <div class="legend-row"><div class="swatch severe"></div><div id="legendSevere"></div></div>
-        <div class="legend-row"><div class="swatch medium"></div><div id="legendMedium"></div></div>
-        <div class="legend-row"><div class="swatch wh"></div><div id="legendWh"></div></div>
+  <div id="countryView">
+    <div id="emptyBanner"></div>
+    <div class="main-row">
+      <div class="main-left">
+        <div class="weekday-row" id="weekdayRow"></div>
+        <div class="grid" id="grid"></div>
       </div>
-      <div id="callouts"></div>
+      <div class="main-right">
+        <div class="legend-card">
+          <div class="legend-title" id="legendTitle"></div>
+          <div class="legend-row"><div class="swatch severe"></div><div id="legendSevere"></div></div>
+          <div class="legend-row"><div class="swatch medium"></div><div id="legendMedium"></div></div>
+          <div class="legend-row"><div class="swatch wh"></div><div id="legendWh"></div></div>
+        </div>
+        <div id="callouts"></div>
+      </div>
     </div>
   </div>
+  <div id="whView" style="display:none; padding: 18px 34px 6px;"></div>
   <div class="footer" id="footer"></div>
 </div>
 </div>
@@ -272,6 +301,51 @@ function findTodayMonthIdx() {
   }
   return idx;
 }
+
+// ---------- warehouse view data (synced monthly from Feishu "Holiday Schedule - Overseas Warehouses") ----------
+// Source of truth: only whichever single month is currently populated in that Feishu sheet.
+// Re-run the sync each time the sheet is updated - this block gets replaced wholesale, not accumulated.
+const WAREHOUSE_MONTH = {
+  monthLabel: { zh: "2026年9月", en: "September 2026" },
+  sourceNote: { zh: "数据来源: 飞书《Holiday Schedule - Overseas Warehouses》表(万邑通/谷仓等仓库方填报)", en: "Source: Feishu \"Holiday Schedule - Overseas Warehouses\" sheet (filed by warehouse operators incl. 万邑通/谷仓)" },
+  regions: [
+    { id: "americas", zh: "Americas", en: "Americas", warehouses: [
+      { code: "USKY3/USKY5", country: "US", countryZh: "美国", holidays: [
+        { zh: "劳动节 Labor Day", en: "Labor Day", date: { zh: "9月7日(周一)", en: "Sep 7 (Mon)" },
+          note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
+      ] },
+      { code: "USSC/USEA", country: "US", countryZh: "美国", holidays: [
+        { zh: "劳动节 Labor Day", en: "Labor Day", date: { zh: "9月7日(周一)", en: "Sep 7 (Mon)" },
+          note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
+      ] },
+      { code: "CATO", country: "CA", countryZh: "加拿大", holidays: [
+        { zh: "劳动节 Labour Day", en: "Labour Day", date: { zh: "9月7日(周一)", en: "Sep 7 (Mon)" },
+          note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } },
+        { zh: "全国真相与和解日", en: "National Day for Truth and Reconciliation", date: { zh: "9月30日(周三)", en: "Sep 30 (Wed)" },
+          note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
+      ] },
+      { code: "AU", country: "AU", countryZh: "澳大利亚", holidays: [
+        { zh: "AFL总决赛前一周五", en: "Friday before the AFL Grand Final", date: { zh: "9月25日(周五)", en: "Sep 25 (Fri)" },
+          note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
+      ] },
+      { code: "BH", country: "LATAM Others", countryZh: "拉美其他地区", holidays: [] },
+      { code: "LY", country: "MX", countryZh: "墨西哥", holidays: [] }
+    ] },
+    { id: "emea", zh: "EMEA", en: "EMEA", warehouses: [
+      { code: "DEBR2", country: "DE", countryZh: "德国", holidays: [] },
+      { code: "DEBR2", country: "EU", countryZh: "欧盟(其他)", holidays: [] },
+      { code: "UKTW", country: "UK", countryZh: "英国", holidays: [] },
+      { code: "FRV", country: "FR", countryZh: "法国", holidays: [] },
+      { code: "BH", country: "ME", countryZh: "中东", holidays: [] }
+    ] },
+    { id: "apac", zh: "APAC", en: "APAC", warehouses: [
+      { code: "Dida", country: "JP", countryZh: "日本", holidays: [] },
+      { code: "JD", country: "SG", countryZh: "新加坡", holidays: [] },
+      { code: "BH", country: "HK", countryZh: "香港", holidays: [] },
+      { code: "BH", country: "SEA", countryZh: "东南亚", holidays: [] }
+    ] }
+  ]
+};
 
 // country metadata: code -> {zh, en}   (composite codes like "UK/DE/IT" are built on the fly, no lookup needed)
 const COUNTRY = {
@@ -1020,6 +1094,7 @@ let lang = "zh";
 let regionId = "all";
 let monthIdx = findTodayMonthIdx(); // default to whatever the real current month is (clamped into range)
 let monthPickerOpen = false;
+let viewMode = "country"; // "country" | "warehouse"
 
 function currentRegion() { return REGIONS.find(r => r.id === regionId); }
 function currentMonth() { return MONTHS[monthIdx]; }
@@ -1030,7 +1105,115 @@ function filteredItems(day) {
   return items.filter(h => h.region === regionId);
 }
 
+function toggleView() {
+  viewMode = (viewMode === "country") ? "warehouse" : "country";
+  render();
+}
+
+function renderWarehouseView() {
+  const el = document.getElementById("whView");
+  el.innerHTML = "";
+
+  const monthLabel = document.createElement("div");
+  monthLabel.className = "wh-month-label";
+  monthLabel.textContent = WAREHOUSE_MONTH.monthLabel[lang];
+  el.appendChild(monthLabel);
+
+  WAREHOUSE_MONTH.regions.forEach(region => {
+    const section = document.createElement("div");
+    section.className = "wh-region";
+
+    const title = document.createElement("div");
+    title.className = "wh-region-title";
+    title.textContent = region[lang];
+    section.appendChild(title);
+
+    const grid = document.createElement("div");
+    grid.className = "wh-grid";
+
+    region.warehouses.forEach(wh => {
+      const card = document.createElement("div");
+      card.className = "wh-card" + (wh.holidays.length ? " has-holiday" : "");
+
+      const head = document.createElement("div");
+      const codeSpan = document.createElement("span");
+      codeSpan.className = "wh-code";
+      codeSpan.textContent = wh.code;
+      head.appendChild(codeSpan);
+      const countrySpan = document.createElement("span");
+      countrySpan.className = "wh-country";
+      countrySpan.textContent = lang === "zh" ? wh.countryZh : wh.country;
+      head.appendChild(countrySpan);
+      card.appendChild(head);
+
+      if (wh.holidays.length) {
+        wh.holidays.forEach(h => {
+          const hdiv = document.createElement("div");
+          hdiv.className = "wh-holiday";
+          const hname = document.createElement("div");
+          hname.className = "wh-hname";
+          hname.textContent = h[lang];
+          hdiv.appendChild(hname);
+          const hdate = document.createElement("div");
+          hdate.className = "wh-hdate";
+          hdate.textContent = h.date[lang];
+          hdiv.appendChild(hdate);
+          const hnote = document.createElement("div");
+          hnote.className = "wh-hnote";
+          hnote.textContent = h.note[lang];
+          hdiv.appendChild(hnote);
+          card.appendChild(hdiv);
+        });
+      } else {
+        const quiet = document.createElement("div");
+        quiet.className = "wh-quiet";
+        quiet.textContent = lang === "zh" ? "本月无停摆" : "No closures this month";
+        card.appendChild(quiet);
+      }
+
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    el.appendChild(section);
+  });
+
+  const src = document.createElement("div");
+  src.style.fontSize = "10.5px";
+  src.style.color = "var(--slate)";
+  src.style.marginTop = "6px";
+  src.textContent = WAREHOUSE_MONTH.sourceNote[lang];
+  el.appendChild(src);
+}
+
 function render() {
+  document.getElementById("viewBtn").textContent = lang === "zh"
+    ? (viewMode === "country" ? "仓库视图" : "国家视图")
+    : (viewMode === "country" ? "Warehouse view" : "Country view");
+
+  const countryViewEl = document.getElementById("countryView");
+  const whViewEl = document.getElementById("whView");
+  const regionBarEl = document.getElementById("regionBar");
+  if (viewMode === "warehouse") {
+    countryViewEl.style.display = "none";
+    whViewEl.style.display = "block";
+    regionBarEl.style.display = "none";
+    renderWarehouseView();
+    document.getElementById("kicker").textContent = T.kicker[lang];
+    document.getElementById("title").textContent = lang === "zh" ? "海外仓假期日历" : "Overseas Warehouse Holiday Calendar";
+    document.getElementById("subtitle").textContent = T.subtitle[lang];
+    document.getElementById("note").textContent = T.note[lang];
+    document.getElementById("langBtn").textContent = lang === "zh" ? "EN" : "中文";
+    document.getElementById("coverage").textContent = lang === "zh"
+      ? "以我们实际合作的海外仓为主视角,国家仅作为该仓所在地的辅助标签"
+      : "Organized by our actual partner warehouses; country is shown only as a secondary label for each warehouse's location";
+    document.getElementById("footer").textContent = T.generated[lang];
+    return;
+  }
+  countryViewEl.style.display = "block";
+  whViewEl.style.display = "none";
+  regionBarEl.style.display = "flex";
+
   const region = currentRegion();
   const month = currentMonth();
 
