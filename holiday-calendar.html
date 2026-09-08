@@ -16,6 +16,7 @@
     --brass-soft: #D8C79A;
     --severe: #7A2331; --severe-bg: #F7EBE9; --severe-line: #E3C6C3;
     --medium: #8A6A26; --medium-bg: #F6EFDE; --medium-line: #E4D3A6;
+    --wh: #1F5C73; --wh-bg: #E4EFF2; --wh-line: #B9D4DC;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -161,6 +162,9 @@
   }
   .badge.severe { background: var(--severe); }
   .badge.medium { background: var(--medium); }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; margin: 4px 0 1px; }
+  .badge-row .badge { margin: 0; }
+  .badge.wh { background: var(--wh); }
   .cell .label { font-size: 8.5px; color: #545B67; line-height: 1.25; margin: 1px 0 0; }
 
   .legend-card {
@@ -175,6 +179,7 @@
   .swatch { width: 11px; height: 11px; flex-shrink: 0; margin-top: 1px; }
   .swatch.severe { background: var(--severe); }
   .swatch.medium { background: var(--medium); }
+  .swatch.wh { background: var(--wh); }
 
   .callout {
     background: var(--card); border: 1px solid var(--line); border-top: 2px solid var(--navy);
@@ -223,6 +228,7 @@
         <div class="legend-title" id="legendTitle"></div>
         <div class="legend-row"><div class="swatch severe"></div><div id="legendSevere"></div></div>
         <div class="legend-row"><div class="swatch medium"></div><div id="legendMedium"></div></div>
+        <div class="legend-row"><div class="swatch wh"></div><div id="legendWh"></div></div>
       </div>
       <div id="callouts"></div>
     </div>
@@ -246,6 +252,7 @@ const T = {
   legendTitle: { zh: "图例 / 本月重点停摆窗口", en: "Legend / Key Shutdown Windows This Month" },
   legendSevere: { zh: "全网停运/多日(3天以上) — 需提前1周做发货缓冲", en: "Network-wide shutdown / multi-day (3+ days) — build in 1 week shipping buffer" },
   legendMedium: { zh: "单日/局部停运 — 当天不派送,次日基本恢复", en: "Single-day / partial suspension — no delivery that day, resumes next day" },
+  legendWh: { zh: "仓库标签 — 该假期为特定仓库专属,或已按具体仓库交叉确认", en: "Warehouse tag — holiday is specific to, or cross-confirmed for, a particular warehouse" },
   noHolidayThisRegion: { zh: "本区域本月暂无标注的假期停摆窗口。", en: "No flagged holiday shutdown window for this region this month." },
   quietPrefix: { zh: "本月无重大法定假期停摆的国家: ", en: "No major statutory holiday shutdown this month: " },
   generated: { zh: "生成日期: 2026-09-08(全量核实版) · 覆盖2026年8月至2027年12月 · 已按各国官方假日来源逐一核实并补全;2027年多数农历/浮动假期及中国大陆2027年节假日安排为预估,以官方公布为准", en: "Generated: 2026-09-08 (fully re-verified) - Covers August 2026 through December 2027 - Cross-checked against each country's official holiday source; most 2027 lunar/floating holidays and China's 2027 schedule are estimates pending official confirmation" },
@@ -339,7 +346,7 @@ const MONTHS = [
     holidays: {
       1: [{country:"VN", region:"apac", sev:"medium", zh:"越南 国庆日(法定第二天)", en:"Vietnam National Day (2nd statutory day)"}],
       2: [{country:"VN", region:"apac", sev:"medium", zh:"越南 国庆日", en:"Vietnam National Day"}],
-      7: [{country:"US", region:"americas", sev:"medium", zh:"美国 劳动节", en:"US Labor Day"},
+      7: [{country:"US", region:"americas", sev:"medium", zh:"美国 劳动节", en:"US Labor Day", wh:"USEA/USSC"},
            {country:"CA", region:"americas", sev:"medium", zh:"加拿大 劳动节", en:"Canada Labour Day"}],
       16: [{country:"MX", region:"americas", sev:"medium", zh:"墨西哥 独立日", en:"Mexico Independence Day"},
            {country:"MY", region:"apac", sev:"medium", zh:"马来西亚 马来西亚日", en:"Malaysia Day"}],
@@ -1034,6 +1041,7 @@ function render() {
   document.getElementById("legendTitle").textContent = T.legendTitle[lang];
   document.getElementById("legendSevere").textContent = T.legendSevere[lang];
   document.getElementById("legendMedium").textContent = T.legendMedium[lang];
+  document.getElementById("legendWh").textContent = T.legendWh[lang];
   document.getElementById("langBtn").textContent = lang === "zh" ? "EN" : "中文";
 
   // coverage line: full list on "all", region-specific list otherwise
@@ -1200,13 +1208,22 @@ function render() {
         num.textContent = day;
         cell.appendChild(num);
         items.slice(0,3).forEach(h => {
+          const badgeRow = document.createElement("div");
+          badgeRow.className = "badge-row";
           const badge = document.createElement("div");
           badge.className = "badge " + h.sev;
           badge.textContent = h.country;
-          cell.appendChild(badge);
+          badgeRow.appendChild(badge);
+          if (h.wh) {
+            const whBadge = document.createElement("div");
+            whBadge.className = "badge wh";
+            whBadge.textContent = (lang === "zh" ? "仓:" : "WH:") + h.wh;
+            badgeRow.appendChild(whBadge);
+          }
+          cell.appendChild(badgeRow);
           const label = document.createElement("div");
           label.className = "label";
-          label.textContent = h[lang] + (h.wh ? (lang === "zh" ? ` · 仓库:${h.wh}` : ` · WH:${h.wh}`) : "");
+          label.textContent = h[lang];
           cell.appendChild(label);
         });
       }
