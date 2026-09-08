@@ -348,7 +348,8 @@ const MONTHS = [
       21: [{country:"JP", region:"apac", sev:"severe", zh:"日本 敬老日", en:"Japan Respect for the Aged Day"}],
       22: [{country:"JP", region:"apac", sev:"severe", zh:"日本 Silver Week", en:"Japan Silver Week (bridge day)"}],
       23: [{country:"JP", region:"apac", sev:"severe", zh:"日本 秋分节", en:"Japan Autumnal Equinox Day"}],
-      25: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 中秋节", en:"China Mid-Autumn Festival"}],
+      25: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 中秋节", en:"China Mid-Autumn Festival"},
+           {country:"AU", region:"americas", sev:"medium", zh:"澳大利亚 AFL总决赛前一周五(维多利亚州仓库专属假日)", en:"AFL Grand Final Friday (Victoria state holiday)", wh:"AUME"}],
       26: [{country:"CN", region:"china", sev:"severe", zh:"中秋假期", en:"Mid-Autumn Holiday"},
            {country:"HK", region:"apac", sev:"severe", zh:"香港 中秋翌日", en:"Hong Kong Day After Mid-Autumn"}],
       27: [{country:"CN", region:"china", sev:"severe", zh:"中国大陆 中秋假期", en:"China Mid-Autumn Holiday"}],
@@ -832,6 +833,7 @@ const MONTHS = [
            {country:"MX", region:"americas", sev:"medium", zh:"墨西哥 独立日", en:"Mexico Independence Day"}],
       20: [{country:"JP", region:"apac", sev:"severe", zh:"日本 敬老日", en:"Japan Respect for the Aged Day"}],
       23: [{country:"JP", region:"apac", sev:"severe", zh:"日本 秋分节(与敬老日不连休)", en:"Japan Autumnal Equinox Day (no bridge with Respect for the Aged Day this year)"}],
+      24: [{country:"AU", region:"americas", sev:"medium", zh:"澳大利亚 AFL总决赛前一周五(维多利亚州仓库专属假日)", en:"AFL Grand Final Friday (Victoria state holiday)", wh:"AUME"}],
       30: [{country:"CA", region:"americas", sev:"medium", zh:"加拿大 全国真相与和解日", en:"Canada National Day for Truth and Reconciliation"}],
     },
     callouts: [
@@ -1204,7 +1206,7 @@ function render() {
           cell.appendChild(badge);
           const label = document.createElement("div");
           label.className = "label";
-          label.textContent = h[lang];
+          label.textContent = h[lang] + (h.wh ? (lang === "zh" ? ` · 仓库:${h.wh}` : ` · WH:${h.wh}`) : "");
           cell.appendChild(label);
         });
       }
