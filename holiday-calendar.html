@@ -307,36 +307,35 @@ function findTodayMonthIdx() {
 // Source of truth: only whichever single month is currently populated in that Feishu sheet.
 // Re-run the sync each time the sheet is updated - this block gets replaced wholesale, not accumulated.
 const WAREHOUSE_MONTH = {
-  monthLabel: { zh: "2026年9月", en: "September 2026" },
-  sourceNote: { zh: "数据来源: 飞书《Holiday Schedule - Overseas Warehouses》表(万邑通/谷仓等仓库方填报)", en: "Source: Feishu \"Holiday Schedule - Overseas Warehouses\" sheet (filed by warehouse operators incl. 万邑通/谷仓)" },
+  monthLabel: { zh: "2026年10月", en: "October 2026" },
+  sourceNote: { zh: "数据来源: 飞书《Holiday Schedule - Overseas Warehouses》表(万邑通/谷仓等仓库方填报) · 自动同步于 2026-09-22", en: "Source: Feishu \"Holiday Schedule - Overseas Warehouses\" sheet (filed by warehouse operators incl. 万邑通/谷仓) · Auto-synced 2026-09-22" },
   regions: [
     { id: "americas", zh: "美洲", en: "Americas", warehouses: [
       { code: "USKY3/USKY5", country: "US", countryZh: "美国", holidays: [
-        { zh: "劳动节 Labor Day", en: "Labor Day", date: { zh: "9月7日(周一)", en: "Sep 7 (Mon)" },
+        { zh: "哥伦布日 Columbus Day", en: "Columbus Day", date: { zh: "10月12日(周一)", en: "Oct 12 (Mon)" },
           note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
       ] },
-      { code: "USSC/USEA", country: "US", countryZh: "美国", holidays: [
-        { zh: "劳动节 Labor Day", en: "Labor Day", date: { zh: "9月7日(周一)", en: "Sep 7 (Mon)" },
-          note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
-      ] },
+      { code: "USSC/USEA", country: "US", countryZh: "美国", holidays: [] },
       { code: "CATO", country: "CA", countryZh: "加拿大", holidays: [
-        { zh: "劳动节 Labour Day", en: "Labour Day", date: { zh: "9月7日(周一)", en: "Sep 7 (Mon)" },
-          note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } },
-        { zh: "全国真相与和解日", en: "National Day for Truth and Reconciliation", date: { zh: "9月30日(周三)", en: "Sep 30 (Wed)" },
+        { zh: "感恩节 Thanksgiving Day", en: "Thanksgiving Day", date: { zh: "10月12日(周一)", en: "Oct 12 (Mon)" },
           note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
       ] },
       { code: "AU", country: "AU", countryZh: "澳大利亚", holidays: [
-        { zh: "AFL总决赛前一周五", en: "Friday before the AFL Grand Final", date: { zh: "9月25日(周五)", en: "Sep 25 (Fri)" },
+        { zh: "新南威尔士州劳动节", en: "NSW Labour Day", date: { zh: "10月5日(周一)", en: "Oct 5 (Mon)" },
           note: { zh: "长周末延迟,尾程时效+1-2天", en: "Long weekend delay, transit time +1-2 days" } }
       ] },
+      { code: "BH", country: "NZ", countryZh: "新西兰", holidays: [] },
       { code: "BH", country: "LATAM Others", countryZh: "拉美其他地区", holidays: [] },
       { code: "LY", country: "MX", countryZh: "墨西哥", holidays: [] }
     ] },
     { id: "emea", zh: "EMEA", en: "EMEA", warehouses: [
-      { code: "DEBR2", country: "DE", countryZh: "德国", holidays: [] },
+      { code: "DEBR2", country: "DE", countryZh: "德国", holidays: [
+        { zh: "德国统一日", en: "German Unity Day", date: { zh: "10月3日(周六)", en: "Oct 3 (Sat)" },
+          note: { zh: "落在周末,对尾程影响较小,仍建议留意清关/揽收窗口", en: "Falls on a weekend; limited impact, but watch customs/pickup windows" } }
+      ] },
       { code: "DEBR2", country: "EU", countryZh: "欧盟(其他)", holidays: [] },
       { code: "UKTW", country: "UK", countryZh: "英国", holidays: [] },
-      { code: "FRV", country: "FR", countryZh: "法国", holidays: [] },
+      { code: "FRVI", country: "FR", countryZh: "法国", holidays: [] },
       { code: "BH", country: "ME", countryZh: "中东", holidays: [] }
     ] },
     { id: "apac", zh: "APAC", en: "APAC", warehouses: [
