@@ -1,6 +1,7 @@
 # Renders region cards that mirror holiday-calendar.html (warehouse view) 1:1.
 # Geometry/colors/fonts were read off the live page's computed styles.
-import json
+import json, os
+OUT=os.environ.get("HOLIDAY_OUT_DIR",os.getcwd())
 from PIL import Image, ImageDraw, ImageFont
 
 S = 2  # supersample scale
@@ -29,7 +30,8 @@ HDR_H=94.5; PAD_X=34; INNER=690
 COL_W=223.33; GAP=10
 CONTENT=COL_W-2*12-2*1  # text width inside a card
 
-def note_for(dw):
+def note_for(dw, multi=False):
+    if multi: return "Multi-day closure; pickup/delivery resumes after, allow +1-2 days from the last day"
     if dw in ("Saturday","Sunday"): return "Falls on a weekend; limited impact, but watch customs/pickup windows"
     if dw in ("Monday","Friday"):   return "Long weekend delay, transit time +1-2 days"
     return "Warehouse/carrier closure, transit time +1-2 days"
@@ -47,7 +49,7 @@ def wrap(t,f,maxw):
 
 def card_lines(w):
     f=F(SANS,9.5)
-    return [wrap(note_for(h["dow"]),f,CONTENT) for h in w["holidays"]]
+    return [wrap(note_for(h["dow"], bool(h.get("date_end"))),f,CONTENT) for h in w["holidays"]]
 
 def card_h(w,lines):
     y=29.5
@@ -76,10 +78,15 @@ def draw_card(d,x,y,h,item,lines):
         for dx in range(0,int(CONTENT),6):  # dashed rule
             d.line([(x+13+dx)*S,cy*S,(x+13+min(dx+3,CONTENT))*S,cy*S],fill=HL_BD,width=max(1,int(S)))
         cy+=7
-        d.text(((x+13)*S,cy*S),h_["name"],font=F(SANS_B,11.5),fill=HNAME,anchor="la"); cy+=14.5
+        d.text(((x+13)*S,cy*S),h_.get("name_en",h_["name"]),font=F(SANS_B,11.5),fill=HNAME,anchor="la"); cy+=14.5
         p=h_["date"].split("/")
-        d.text(((x+13)*S,cy*S),"%s %s (%s)"%(MON[int(p[1])][:3],int(p[2]),DOW.get(h_["dow"],h_["dow"])),
-               font=F(SANS,10.5),fill=HDATE,anchor="la"); cy+=14
+        if h_.get("date_end"):
+            p2=h_["date_end"].split("/")
+            dtxt="%s %s-%s (%s-%s)"%(MON[int(p[1])][:3],int(p[2]),int(p2[2]),
+                                     DOW.get(h_["dow"],h_["dow"]),DOW.get(h_["dow_end"],h_["dow_end"]))
+        else:
+            dtxt="%s %s (%s)"%(MON[int(p[1])][:3],int(p[2]),DOW.get(h_["dow"],h_["dow"]))
+        d.text(((x+13)*S,cy*S),dtxt,font=F(SANS,10.5),fill=HDATE,anchor="la"); cy+=14
         for ln in ls:
             d.text(((x+13)*S,cy*S),ln,font=F(SANS,9.5),fill=HNOTE,anchor="la"); cy+=12.825
 
@@ -134,6 +141,6 @@ out={}
 for rn in ["Americas","EMEA","APAC"]:
     whs=[w for w in rows if w["region"]==rn]
     if any(w["holidays"] for w in whs):
-        p="/tmp/hol/holiday_%s.png"%rn.lower(); render(rn,whs,p); out[rn]=p
+        p=os.path.join(OUT,"holiday_%s.png"%rn.lower()); render(rn,whs,p); out[rn]=p
     else: print("skip",rn,"(no closures)")
-json.dump(out,open("/tmp/hol/images.json","w"))
+json.dump(out,open(os.path.join(OUT,"images.json"),"w"))
